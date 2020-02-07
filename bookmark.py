@@ -8,11 +8,12 @@ import flask
 from flask import Flask, redirect
 app = Flask(__name__)
 
-@app.route('/<name>')
-def goto(name):
+@app.route('/<name>', defaults={'rest': None})
+@app.route('/<name>/<rest>')
+def goto(name, rest):
     bookmark = get_bookmark(name)
     if bookmark:
-        return redirect(bookmark)
+        return redirect('/'.join([bookmark, rest]))
     else:
         return f"""\
             <html>
