@@ -2,6 +2,28 @@ import contextlib
 import sqlite3
 import sys
 
+import flask
+
+
+from flask import Flask, redirect
+app = Flask(__name__)
+
+@app.route('/<name>')
+def goto(name):
+    bookmark = get_bookmark(name)
+    if bookmark:
+        return redirect(bookmark)
+    else:
+        return f"""\
+            <html>
+                <body>
+                    <h1>{name} not found!</h1>
+                    Add with cli: `bookmark add {name} ...`
+                </body>
+            </html>
+        """
+
+
 DB_NAME = 'bookmarks.db'
 
 def get_bookmark(bookmark_name: str) -> str:
@@ -40,8 +62,9 @@ def create_schema():
 def display_help():
     print('''\
 Usage:
-    pipenv run app.py (get|set|add|remove|copy) name (url)?
-    pipenv create-schema
+    bookmark app.py (get|set|add|remove|copy) name (url)?
+    bookmark create-schema
+    bookmark serve
 ''')
 
 
@@ -61,6 +84,8 @@ if __name__ == '__main__':
             raise NotImplementedError()
         elif command == 'remove':
             raise NotImplementedError()
+        elif command == 'serve':
+            app.run(host='go', port=80)
         else:
             display_help()
         
