@@ -44,7 +44,7 @@ def set_bookmark(name: str, url: str) -> str:
     with contextlib.closing(sqlite3.connect(DB_NAME)) as conn:
         c = conn.cursor()
         if prev:
-            print('Updating previous value of {prev} to {url}')
+            print(f'Updating previous value of {prev} to {url}')
             c.execute('UPDATE bookmarks SET url=? WHERE name=?', url, name)
         else:
             c.execute('INSERT INTO bookmarks(name, url) VALUES (?, ?)', (name, url))
