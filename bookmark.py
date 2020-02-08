@@ -12,8 +12,10 @@ app = Flask(__name__)
 @app.route('/<name>/<rest>')
 def goto(name, rest):
     bookmark = get_bookmark(name)
-    if bookmark:
+    if bookmark and rest:
         return redirect('/'.join([bookmark, rest]))
+    elif bookmark:
+        return redirect(bookmark)
     else:
         return f"""\
             <html>
